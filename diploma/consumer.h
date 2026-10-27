@@ -2,24 +2,23 @@
 #include <queue>
 #include <string>
 #include "message.h"
+#include "channel.h"
 
 class Consumer {
 public:
-    explicit Consumer(std::queue<Message>& channel) : channel_(channel) {}
+    explicit Consumer(Channel& channel) : channel_(channel) {}
 
     bool ProcessNext() {
-        if (channel_.empty()) { return false; }
+        Message message(0, "");
+        if (!channel_.TryPop(message)) return false;
 
-        const Message& message = channel_.front();
-        const int id = message.GetId();
+        std::cout << "Consumer: обработка сообщения " << message.GetId()
+                  << ": " << message.GetText() << std::endl;
 
-        std::cout << "Consumer: обработка сообщения " << id << ": " << message.GetText() << std::endl;
-
-        channel_.pop();
-        std::cout << "Consumer: обработка сообщения " << id << " подтверждена" << std::endl;
+        channel_.Commit(message);
         return true;
     }
 
 private:
-    std::queue<Message>& channel_;
+    Channel& channel_;
 };
