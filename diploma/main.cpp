@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
     std::unique_ptr<Channel> channel;
     if (use_new_channel) {
-        channel = std::make_unique<NewChannel>("topic/messages");
+        channel = std::make_unique<NewChannel>();
     } else {
         channel = std::make_unique<SimpleChannel>();
     }
