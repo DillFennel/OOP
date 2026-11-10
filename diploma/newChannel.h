@@ -11,7 +11,7 @@ public:
         queue_.push_back(m);
         OnPublished();
     }
-    bool TryPop(Message& out) override {
+    bool TryReceive(Message& out) override {
         if (queue_.empty()) return false;
         out = queue_.front();
         in_flight_.insert(out.GetId());

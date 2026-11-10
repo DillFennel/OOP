@@ -10,7 +10,10 @@ public:
     virtual ~Channel() = default;
 
     virtual void Publish(const Message& message) = 0;
-    virtual bool TryPop(Message& out) = 0;
+
+    // Возвращает false, если очередь пуста.
+    // После получения обработайте сообщение и вызовите Commit() перед следующим чтением.
+    virtual bool TryReceive(Message& out) = 0;
     virtual std::size_t Size() const = 0;
     virtual void Commit(const Message& message) = 0;
 

@@ -10,7 +10,7 @@ public:
 
     bool ProcessNext() {
         Message message(0, "");
-        if (!channel_.TryPop(message)) return false;
+        if (!channel_.TryReceive(message)) return false;
 
         std::cout << "Consumer: обработка сообщения " << message.GetId()
                   << ": " << message.GetText() << std::endl;

@@ -10,7 +10,7 @@ public:
         queue_.push(m);
         OnPublished();
     }
-    bool TryPop(Message& out) override {
+    bool TryReceive(Message& out) override {
         if (queue_.empty()) return false;
         out = queue_.front();
         queue_.pop();
