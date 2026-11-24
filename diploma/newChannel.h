@@ -6,25 +6,26 @@
 #include "message.h"
 
 class NewChannel : public Channel {
+    std::deque<Message> queue;
+    std::unordered_set<int> process;
 public:
-    void Publish(const Message& m) override {
-        queue_.push_back(m);
-        OnPublished();
+    void publish(const Message& message) override {
+        queue.push_back(message);
+        count_published();
     }
-    bool TryReceive(Message& out) override {
-        if (queue_.empty()) return false;
-        out = queue_.front();
-        in_flight_.insert(out.GetId());
+    bool try_receive(Message& out) override {
+        if (queue.empty()) return false;
+        out = queue.front();
+        process.insert(out.GetId());
         return true;
     }
-    void Commit(const Message& m) override {
-        in_flight_.erase(m.GetId());
-        if (!queue_.empty() && queue_.front().GetId() == m.GetId())
-            queue_.pop_front();
+    void commit(const Message& message) override {
+        process.erase(message.GetId());
+        if (!queue.empty() && queue.front().GetId() == message.GetId()) {
+            queue.pop_front();
+        }
+        std::cout << "NewChannel: сообщение " << message.GetId() << " обработано" << std::endl;
     }
-    std::size_t Size() const override { return queue_.size(); }
-    std::size_t InFlightCount() const { return in_flight_.size(); }
-private:
-    std::deque<Message> queue_;
-    std::unordered_set<int> in_flight_;
+    std::size_t get_size() const override { return queue.size(); }
+    std::size_t get_process_size() const { return process.size(); }
 };

@@ -4,13 +4,11 @@
 #include "channel.h"
 
 class Producer {
+    Channel& channel;
 public:
-    explicit Producer(Channel& channel) : channel_(channel) {}
+    explicit Producer(Channel& channel_) : channel(channel_) {}
 
     void Publish(const Message& message) {
-        channel_.Publish(message);
+        channel.publish(message);
     }
-
-private:
-    Channel& channel_;
 };

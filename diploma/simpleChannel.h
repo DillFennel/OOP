@@ -5,21 +5,20 @@
 #include "message.h"
 
 class SimpleChannel : public Channel {
+    std::queue<Message> queue;
 public:
-    void Publish(const Message& m) override {
-        queue_.push(m);
-        OnPublished();
+    void publish(const Message& message) override {
+        queue.push(message);
+        count_published();
     }
-    bool TryReceive(Message& out) override {
-        if (queue_.empty()) return false;
-        out = queue_.front();
-        queue_.pop();
+    bool try_receive(Message& out) override {
+        if (queue.empty()) return false;
+        out = queue.front();
+        queue.pop();
         return true;
     }
-    void Commit(const Message&) override {
-        // нету
+    void commit(const Message& message) override {
+        std::cout << "SimpleChannel: сообщение " << message.GetId() << " обработано" << std::endl;
     }
-    std::size_t Size() const override { return queue_.size(); }
-private:
-    std::queue<Message> queue_;
+    std::size_t get_size() const override { return queue.size(); }
 };

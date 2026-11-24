@@ -6,22 +6,17 @@
 #include "message.h"
 
 class Channel {
+    std::size_t published_count = 0;
+protected:
+    void count_published() { ++published_count; }
 public:
     virtual ~Channel() = default;
 
-    virtual void Publish(const Message& message) = 0;
+    virtual void publish(const Message& message) = 0;
 
-    // Возвращает false, если очередь пуста.
-    // После получения обработайте сообщение и вызовите Commit() перед следующим чтением.
-    virtual bool TryReceive(Message& out) = 0;
-    virtual std::size_t Size() const = 0;
-    virtual void Commit(const Message& message) = 0;
+    virtual bool try_receive(Message& out) = 0;
+    virtual std::size_t get_size() const = 0;
+    virtual void commit(const Message& message) = 0;
 
-    std::size_t PublishedCount() const { return published_count_; }
-
-protected:
-    void OnPublished() { ++published_count_; }
-
-private:
-    std::size_t published_count_ = 0;
+    std::size_t get_published_count() const { return published_count; }
 };

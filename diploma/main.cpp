@@ -30,9 +30,9 @@ int main(int argc, char** argv) {
     while (consumer.ProcessNext()) {
         counter++;
         std::cout << "Обработано сообщений: " << counter << std::endl;
-        std::cout << "Осталось сообщений: " << channel->Size() << std::endl;
+        std::cout << "Осталось сообщений: " << channel->get_size() << std::endl;
     }
-    std::cout << "Всего опубликовано: " << channel->PublishedCount() << std::endl;
+    std::cout << "Всего опубликовано: " << channel->get_published_count() << std::endl;
     std::cout << "Все сообщения обработаны.\n";
     return 0;
 }
