@@ -10,12 +10,12 @@ class Station {
     int bikes;
     int target;
 public:
-    Station(const std::string& name_, int capacity_, int bikes_, int target_):
-        name(name_),
-        capacity(capacity_),
-        bikes(bikes_),
-        target(target_)
-    {
+    Station(std::string name_, int capacity_, int bikes_, int target_) {
+        name = name_;
+        capacity = capacity_;
+        bikes = bikes_;
+        target = target_;
+
         if (bikes < 0 || bikes > capacity || target < 0 || target > capacity) {
             throw std::invalid_argument("ERROR: Запас и цель должны быть в пределах вместимости");
         }
@@ -28,10 +28,14 @@ public:
     int get_diff() const { return target - bikes; }
 
     int transfer_to(Station& destination) {
-        if (get_diff() >= 0 || destination.get_diff() <= 0) {
+        int extra = bikes - target;
+        int needed = destination.target - destination.bikes;
+        if (extra <= 0 || needed <= 0) {
             return 0;
         }
-        int count = std::min(-get_diff(), destination.get_diff());
+
+        // Перевозим столько, сколько можем отдать и сколько нужно другой станции.
+        int count = std::min(extra, needed);
         bikes -= count;
         destination.bikes += count;
         return count;
